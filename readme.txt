@@ -1,10 +1,10 @@
 === EDD Hide Download ===
-Contributors: sumobi
+Contributors: sumobi, alex.i
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EFUPMPEZPGW7L
 Tags: easy digital downloads, digital downloads, e-downloads, edd, hide, e-commerce, ecommerce, hidden, sumobi
 Requires at least: 3.3
 Tested up to: 3.6
-Stable tag: 1.0.1
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,17 @@ Prevents a download appearing on the custom post type archive page or [downloads
 
 == Description ==
 
-This plugin requires [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/ "Easy Digital Downloads"). Allows you to hide a download so it does not appear on the custom post type archive page or anywhere where the [downloads] shortcode is being used. Useful for when you want to show the download by itself and don't want it appearing in the main download loops.
+This plugin requires [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/ "Easy Digital Downloads"). 
+
+It allows you to:
+
+1. Hide a download so it doesn't appear on the custom post type archive page or anywhere where the [downloads] shortcode is being used.
+1. Prevent direct access to the download. The browser will redirec the user to the site's homepage.
+
+This plugin is extremely useful in the following situations:
+
+1. You've created a product landing page and inserted a buy now button to your product. Since the landing page contains all the required product information, you can hide the product on the rest of your site and even prevent direct access to it.
+1. You've added a product (eg support package) that shouldn't sit with your other products you have listed. In this case we can simply hide it from appearing with the other products and insert it where we'd like it to appear using the shortcode. 
 
 **Looking for the perfect Easy Digital Downloads theme?**
 
@@ -40,7 +50,7 @@ Shop Front is a simple, responsive & easily extensible theme for the Easy Digita
 
 OR you can just install it with WordPress by going to Plugins >> Add New >> and type this plugin's name
 
-Tick the "Hide Download" checkbox in Easy Digital Download's Download Configuration metabox and save. The download will now be hidden on the custom post type archive page and anywhere where the [downloads] shortcode has been used.
+After activation, a new "Hide Download" section will appear at the bottom of Easy Digital Download's Download Configuration metabox
 
 == Frequently Asked Questions ==
 
@@ -71,10 +81,19 @@ If you would like to hide it from your custom page template you will need to mod
 
 == Screenshots ==
 
-1. The new checkbox added to the bottom of Easy Digital Download's Download Configuration metabox
+1. The new options added to the bottom of Easy Digital Download's Download Configuration metabox
 
+
+== Upgrade Notice ==
+
+= 1.1 =
+You can now prevent direct access to a download
 
 == Changelog ==
+
+= 1.1 =
+* New: Option for disabling direct access to the download. User will be redirected to homepage. Props alex.i
+* Tweak: Updated .pot file with new localized text strings
 
 = 1.0.1 =
 * Tweak: Moved to bottom of download configuration metabox and added a title.
