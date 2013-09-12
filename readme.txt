@@ -17,7 +17,7 @@ This plugin requires [Easy Digital Downloads](http://wordpress.org/extend/plugin
 It allows you to:
 
 1. Hide a download so it doesn't appear on the custom post type archive page or anywhere where the [downloads] shortcode is being used.
-1. Prevent direct access to the download. The browser will redirec the user to the site's homepage.
+1. Prevent direct access to the download. The browser will redirect the user to the site's homepage.
 
 This plugin is extremely useful in the following situations:
 
