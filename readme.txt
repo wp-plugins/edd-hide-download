@@ -3,12 +3,12 @@ Contributors: sumobi, alex.i
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EFUPMPEZPGW7L
 Tags: easy digital downloads, digital downloads, e-downloads, edd, hide, e-commerce, ecommerce, hidden, sumobi
 Requires at least: 3.3
-Tested up to: 3.6
-Stable tag: 1.1
+Tested up to: 3.6.1
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Prevents a download appearing on the custom post type archive page or [downloads] listing.
+Allows a download to be hidden as well as preventing direct access to the download
 
 == Description ==
 
@@ -16,8 +16,8 @@ This plugin requires [Easy Digital Downloads](http://wordpress.org/extend/plugin
 
 It allows you to:
 
-1. Hide a download so it doesn't appear on the custom post type archive page or anywhere where the [downloads] shortcode is being used.
-1. Prevent direct access to the download. The browser will redirec the user to the site's homepage.
+1. Hide a download so it doesn't appear on the custom post type archive page, anywhere where the [downloads] shortcode is being used, or any custom query on a page template
+1. Prevent direct access to the download. The browser will redirect the user to the site's homepage.
 
 This plugin is extremely useful in the following situations:
 
@@ -52,33 +52,6 @@ OR you can just install it with WordPress by going to Plugins >> Add New >> and 
 
 After activation, a new "Hide Download" section will appear at the bottom of Easy Digital Download's Download Configuration metabox
 
-== Frequently Asked Questions ==
-
-= Where is my download hidden? =
-
-Your download will be hidden on the Custom Post Type Archive page and anywhere where you have used the [downloads] shortcode to display your downloads.
-
-= Where is the Custom Post Type Archive page? =
-
-By default, Easy Digital Downloads turns on the custom post type archive page where all your downloads are listed. This page can be found by appending the following onto your website URL
-
-/downloads
-
-= I'm using a custom page template, my download is not hidden =
-
-This plugin only hides the download from the Custom Post Type Archive page and anywhere where the [downloads] shortcode has been used. 
-
-If you would like to hide it from your custom page template you will need to modify your WP_Query to exclude the hidden downloads. Your query might look like the following:
-
-    $exclude_posts = class_exists( 'EDD_Hide_Download' ) ? $EDD_Hide_Download->get_hidden_downloads() : '';
-    
-    $args = array(
-        'post_type' => 'download',
-        'post__not_in' => $exclude_posts // this is an array of IDs passed in from the plugin
-    );
-
-    $downloads = new WP_Query( $args );
-
 == Screenshots ==
 
 1. The new options added to the bottom of Easy Digital Download's Download Configuration metabox
@@ -86,10 +59,15 @@ If you would like to hide it from your custom page template you will need to mod
 
 == Upgrade Notice ==
 
-= 1.1 =
-You can now prevent direct access to a download
+= 1.1.1 =
+Now hides downloads in page templates using custom queries
 
 == Changelog ==
+
+= 1.1.1 =
+* New: Now hides downloads in page templates using custom queries
+* Tweak: Modified text in configuration options
+* Tweak: Updated .pot file with modified text strings
 
 = 1.1 =
 * New: Option for disabling direct access to the download. User will be redirected to homepage. Props alex.i

@@ -2,8 +2,8 @@
 /*
 Plugin Name: Easy Digital Downloads - Hide Download
 Plugin URI: http://sumobi.com/shop/edd-hide-download/
-Description: Prevents a download from appearing on the custom post type archive page or wherever the [downloads] shortcode is used. Direct access to a download can also be disabled and the user will be redirected to the homepage.
-Version: 1.1
+Description: Allows a download to be hidden as well as preventing direct access to the download
+Version: 1.1.1
 Author: Andrew Munro, Sumobi
 Author URI: http://sumobi.com/
 License: GPL-2.0+
@@ -63,15 +63,14 @@ if ( !class_exists( 'EDD_Hide_Download' ) ) {
 			<p>
 				<label for="edd_hide_download">
 					<input type="checkbox" name="_edd_hide_download" id="edd_hide_download" value="1" <?php checked( true, $checked ); ?> />
-					<?php apply_filters( 'edd_hide_download_label', printf( __( 'Hide this %s from appearing on the custom post type archive page and wherever the [downloads] shortcode is used', 'edd-hd' ), edd_get_label_singular() ) ); ?>
+					<?php apply_filters( 'edd_hide_download_label', printf( __( 'Hide this %s', 'edd-hd' ), strtolower( edd_get_label_singular() ) ) ); ?>
 				
 				</label>
 			</p>
 			<p>
 				<label for="edd_hide_redirect_download">
 					<input type="checkbox" name="_edd_hide_redirect_download" id="edd_hide_redirect_download" value="1" <?php checked( true, $is_redirect ); ?> />
-						<?php apply_filters( 'edd_hide_download_disable_access_label', printf( __( 'Disable direct access to this %s', 'edd-hd' ), edd_get_label_singular() ) ); ?>
-
+						<?php apply_filters( 'edd_hide_download_disable_access_label', printf( __( 'Disable direct access to this %s', 'edd-hd' ), strtolower( edd_get_label_singular() ) ) ); ?>
 				</label>
 			</p>
 
@@ -137,20 +136,22 @@ if ( !class_exists( 'EDD_Hide_Download' ) ) {
 			return $query;
 		}
 
+
 		/**
 		 * Alter the main loop to hide download using pre_get_posts
+		 * We're not using ! is_main_query because no matter what the query is on the page we want to hide them
 		 * @since 1.0
 		 */
 		function pre_get_posts( $query ) {
 
 			// bail if in the admin or we're not working with the main WP query
-			if ( is_admin() || ! $query->is_main_query() )
+			if ( is_admin() )
 				return;
 
-			// modify the query to hide the following downloads IDs
-			if( is_post_type_archive( 'download' ) ) {
-				$query->set( 'post__not_in', $this->get_hidden_downloads() ); 
-			}
+			// hide downloads from all queries except singular pages, which will 404 without the conditional
+			// is_singular('download') doesn't work inside pre_get_posts
+			if ( ! is_singular() )
+				$query->set( 'post__not_in', $this->get_hidden_downloads() );
 
 		}
 
