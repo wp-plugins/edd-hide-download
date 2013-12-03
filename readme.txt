@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: easy digital downloads, digital downloads, e-downloads, edd, hide, e-commerce, ecommerce, hidden, sumobi
 Requires at least: 3.3
 Tested up to: 3.6.1
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,10 +59,13 @@ After activation, a new "Hide Download" section will appear at the bottom of Eas
 
 == Upgrade Notice ==
 
-= 1.1.2 =
-Fixed downloads not showing when using page templates
+= 1.1.3 =
+Fixed bug where some downloads were not showing
 
 == Changelog ==
+
+= 1.1.3 =
+* Fix: Fixed bug where some downloads were not showing
 
 = 1.1.2 =
 * Fix: Fixed downloads not showing when using page templates
