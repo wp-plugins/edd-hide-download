@@ -164,7 +164,7 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 			$is_redirect_active = (boolean) get_post_meta( $post->ID, '_edd_hide_redirect_download', true );
 
 			if ( $is_redirect_active ) {
-				$redirect_url = apply_filters( 'edd_hide_download_redirect_url', site_url() );
+				$redirect_url = apply_filters( 'edd_hide_download_redirect', site_url() );
 
 				if ( isset( $_REQUEST['HTTP_REFERER'] ) ) {
 					$referer = esc_url( $_REQUEST['HTTP_REFERER '] );
