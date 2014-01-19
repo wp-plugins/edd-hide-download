@@ -25,7 +25,7 @@ This plugin is extremely useful in the following situations:
 1. You've created a product landing page and inserted a buy now button to your product. Since the landing page contains all the required product information, you can hide the product on the rest of your site and even prevent direct access to it.
 1. You've added a product (eg support package) that shouldn't sit with your other products you have listed. In this case we can simply hide it from appearing with the other products and insert it where we'd like it to appear using the shortcode. 
 
-** Filter example **
+**Filter example**
 
 Example filter of how you can change the redirect based on the download ID. Copy this function to your child theme's functions.php or custom plugin
 
@@ -47,11 +47,11 @@ Example filter of how you can change the redirect based on the download ID. Copy
 
 **Extensions for Easy Digital Downloads**
 
-[https://easydigitaldownloads.com/extensions/](https://easydigitaldownloads.com/extensions/?ref=166 “Plugins for Easy Digital Downloads")
+[https://easydigitaldownloads.com/extensions/](https://easydigitaldownloads.com/extensions/?ref=166 "Plugins for Easy Digital Downloads")
 
 **Tips for Easy Digital Downloads**
 
-[http://sumobi.com/blog](http://sumobi.com/blog “Tips for Easy Digital Downloads")
+[http://sumobi.com/blog](http://sumobi.com/blog "Tips for Easy Digital Downloads")
 
 **Stay up to date**
 
