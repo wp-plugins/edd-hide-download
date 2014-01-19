@@ -29,7 +29,7 @@ This plugin is extremely useful in the following situations:
 
 Example filter of how you can change the redirect based on the download ID. Copy this function to your child theme's functions.php or custom plugin
 
-    function sumobi_custom_edd_hide_download_redirect_url( $url ) {
+    function sumobi_custom_edd_hide_download_redirect( $url ) {
     	// download has ID of 17
 		if ( '17' == get_the_ID() ) {
 			$url = 'http://easydigitaldownloads.com'; // redirect user to another external URL
@@ -43,7 +43,16 @@ Example filter of how you can change the redirect based on the download ID. Copy
 		// return our new URL
 		return $url;
 	}
-	add_filter( 'edd_hide_download_redirect_url', 'sumobi_custom_edd_hide_download_redirect_url' );
+	add_filter( 'edd_hide_download_redirect', 'sumobi_custom_edd_hide_download_redirect' );
+
+Example filter of how you can globally change the redirect. Copy this function to your child theme's functions.php or custom plugin
+
+    function sumobi_custom_edd_hide_download_redirect_url( $url ) {
+		$url = get_permalink( '8' ); // redirect to another download, post or page
+		
+		return $url;
+	}
+	add_filter( 'edd_hide_download_redirect', 'sumobi_custom_edd_hide_download_redirect' );
 
 **Extensions for Easy Digital Downloads**
 
@@ -81,13 +90,13 @@ After activation, a new "Hide Download" section will appear at the bottom of Eas
 == Upgrade Notice ==
 
 = 1.1.5 =
-New: edd_hide_download_redirect_url filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
+New: edd_hide_download_redirect filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
 Fix: "Disable direct access to this download" will now prevent direct access to the download, even when "Hide this download" is off
 
 == Changelog ==
 
 = 1.1.5 =
-* New: edd_hide_download_redirect_url filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
+* New: edd_hide_download_redirect filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
 * Fix: "Disable direct access to this download" will now prevent direct access to the download, even when "Hide this download" is off
 
 = 1.1.4 =
