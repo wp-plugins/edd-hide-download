@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: easy digital downloads, digital downloads, e-downloads, edd, hide, e-commerce, ecommerce, hidden, sumobi
 Requires at least: 3.3
 Tested up to: 3.6.1
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,28 +18,49 @@ It allows you to:
 
 1. Hide a download so it doesn't appear on the custom post type archive page, anywhere where the [downloads] shortcode is being used, or any custom query on a page template
 1. Prevent direct access to the download. The browser will redirect the user to the site's homepage.
+1. Do a combination of hiding the download and preventing direct access to it
 
 This plugin is extremely useful in the following situations:
 
 1. You've created a product landing page and inserted a buy now button to your product. Since the landing page contains all the required product information, you can hide the product on the rest of your site and even prevent direct access to it.
 1. You've added a product (eg support package) that shouldn't sit with your other products you have listed. In this case we can simply hide it from appearing with the other products and insert it where we'd like it to appear using the shortcode. 
 
-**Looking for the perfect Easy Digital Downloads theme?**
+** Filter example **
 
-[http://wordpress.org/themes/shop-front/](http://wordpress.org/themes/shop-front/ "Shop Front")
+Example filter of how you can change the redirect based on the download ID. Copy this function to your child theme's functions.php or custom plugin
 
-Shop Front is a simple, responsive & easily extensible theme for the Easy Digital Downloads plugin. It also functions perfectly without the plugin as a standard WordPress blog. A free child theme for modifications can be downloaded from [http://sumobi.com/shop/shop-front-child-theme](http://sumobi.com/shop/shop-front-child-theme "Shop Front Child Theme") as well as other free and paid add-ons to enhance the functionality and styling.
+    function sumobi_custom_edd_hide_download_redirect_url( $url ) {
+    	// download has ID of 17
+		if ( '17' == get_the_ID() ) {
+			$url = 'http://easydigitaldownloads.com'; // redirect user to another external URL
+		}
+		
+		// download has ID of 15
+		if( '15' == get_the_ID() ) {
+			$url = get_permalink( '8' ); // redirect to another download which has an ID of 8
+		}
+		
+		// return our new URL
+		return $url;
+	}
+	add_filter( 'edd_hide_download_redirect_url', 'sumobi_custom_edd_hide_download_redirect_url' );
+
+**Extensions for Easy Digital Downloads**
+
+[https://easydigitaldownloads.com/extensions/](https://easydigitaldownloads.com/extensions/?ref=166 “Plugins for Easy Digital Downloads")
+
+**Tips for Easy Digital Downloads**
+
+[http://sumobi.com/blog](http://sumobi.com/blog “Tips for Easy Digital Downloads")
 
 **Stay up to date**
 
-*Subscribe to updates* 
-[http://sumobi.com](http://sumobi.com "Sumobi")
+*Follow me on Twitter* 
+[http://twitter.com/sumobi_](http://twitter.com/sumobi_ "Twitter")
 
 *Become a fan on Facebook* 
 [http://www.facebook.com/sumobicom](http://www.facebook.com/sumobicom "Facebook")
 
-*Follow me on Twitter* 
-[http://twitter.com/sumobi_](http://twitter.com/sumobi_ "Twitter")
 
 == Installation ==
 
@@ -59,13 +80,15 @@ After activation, a new "Hide Download" section will appear at the bottom of Eas
 
 == Upgrade Notice ==
 
-= 1.1.4 =
-Fixed compatibility issue between EDD Tickets and EDD Hide Download that was causing downloads to not be hidden
-
-= 1.1.3 =
-Fixed bug where some downloads were not showing
+= 1.1.5 =
+New: edd_hide_download_redirect_url filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
+Fix: "Disable direct access to this download" will now prevent direct access to the download, even when "Hide this download" is off
 
 == Changelog ==
+
+= 1.1.5 =
+* New: edd_hide_download_redirect_url filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
+* Fix: "Disable direct access to this download" will now prevent direct access to the download, even when "Hide this download" is off
 
 = 1.1.4 =
 * Fix: compatibility issue between EDD Tickets and EDD Hide Download that was causing downloads to not be hidden

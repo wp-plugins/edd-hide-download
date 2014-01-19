@@ -3,15 +3,14 @@
 Plugin Name: Easy Digital Downloads - Hide Download
 Plugin URI: http://sumobi.com/shop/edd-hide-download/
 Description: Allows a download to be hidden as well as preventing direct access to the download
-Version: 1.1.4
+Version: 1.1.5
 Author: Andrew Munro, Sumobi
 Author URI: http://sumobi.com/
 License: GPL-2.0+
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
-
-if ( !class_exists( 'EDD_Hide_Download' ) ) {
+if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 
 	class EDD_Hide_Download {
 
@@ -77,7 +76,6 @@ if ( !class_exists( 'EDD_Hide_Download' ) ) {
 		<?php
 		}
 
-
 		/**
 		 * Add to save function
 		 *
@@ -90,13 +88,11 @@ if ( !class_exists( 'EDD_Hide_Download' ) ) {
 			return $fields;
 		}
 
-
 		/**
 		 * Store the hidden products ids in the options table
 		 *  @since 1.1
 		 */
 		function query_hidden_downloads() {
-			
 			$args = array(
 				'post_type' => 'download',
 				'meta_key' => '_edd_hide_download',
@@ -114,9 +110,7 @@ if ( !class_exists( 'EDD_Hide_Download' ) ) {
 			}
 			
 			update_option( 'edd_hd_ids', $hidden_downloads );
-
 		}
-		
 
 		/**
 		 * Get array hidden downloads
@@ -124,7 +118,6 @@ if ( !class_exists( 'EDD_Hide_Download' ) ) {
 		 * @since 1.0
 		*/
 		function get_hidden_downloads() {			
-
 			return $this->hidden_downloads;
 		}
 
@@ -138,7 +131,6 @@ if ( !class_exists( 'EDD_Hide_Download' ) ) {
 
 			return $query;
 		}
-
 
 		/**
 		 * Alter the main loop to hide download using pre_get_posts
@@ -159,7 +151,6 @@ if ( !class_exists( 'EDD_Hide_Download' ) ) {
 
 		}
 
-
 		/**
 		 * Redirect if product needs to be hidden
 		 *  @since 1.1
@@ -167,24 +158,23 @@ if ( !class_exists( 'EDD_Hide_Download' ) ) {
 		function redirect_hidden() {
 			global $post;
 
-			 if ( ! in_array( $post->ID, $this->hidden_downloads ) )
-			 	return;	
+			if ( ! is_singular( 'download' ) )
+				return;
 
-			 $is_redirect_active = (boolean) get_post_meta( $post->ID, '_edd_hide_redirect_download', true );
+			$is_redirect_active = (boolean) get_post_meta( $post->ID, '_edd_hide_redirect_download', true );
 
-			 if ( $is_redirect_active ) {
-
-				$redirect_url = site_url();
+			if ( $is_redirect_active ) {
+				$redirect_url = apply_filters( 'edd_hide_download_redirect_url', site_url() );
 
 				if ( isset( $_REQUEST['HTTP_REFERER'] ) ) {
 					$referer = esc_url( $_REQUEST['HTTP_REFERER '] );
 
-					if ( strpos( $referer, $redirect_url ) !== false )
+					if ( strpos( $referer, $redirect_url ) !== false ) {
 						$redirect_url = $referer;
+					}
 				}
 
 				wp_redirect( $redirect_url, 301 ); exit;
-				
 			}
 			
 		}
