@@ -3,27 +3,136 @@
 Plugin Name: Easy Digital Downloads - Hide Download
 Plugin URI: http://sumobi.com/shop/edd-hide-download/
 Description: Allows a download to be hidden as well as preventing direct access to the download
-Version: 1.1.5
+Version: 1.2
 Author: Andrew Munro, Sumobi
 Author URI: http://sumobi.com/
 License: GPL-2.0+
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 
-	class EDD_Hide_Download {
+	final class EDD_Hide_Download {
+
+		/**
+		 * Holds the instance
+		 *
+		 * Ensures that only one instance of EDD Hide Download exists in memory at any one
+		 * time and it also prevents needing to define globals all over the place.
+		 *
+		 * TL;DR This is a static property property that holds the singleton instance.
+		 *
+		 * @var object
+		 * @static
+		 * @since 1.2
+		 */
+		private static $instance;
 
 		/**
 		 * Keep the hidden downloads in options
 		 *
-		 * @since  1.0.0
+		 * @since  1.2
 		 * @var    array
 		 */
 		private $hidden_downloads;
 
-		function __construct() {
-			add_action( 'init', array( $this, 'textdomain' ) );
+		/**
+		 * Main Instance
+		 *
+		 * Ensures that only one instance exists in memory at any one
+		 * time. Also prevents needing to define globals all over the place.
+		 *
+		 * @since 1.2
+		 *
+		 */
+		public static function get_instance() {
+			if ( ! isset( self::$instance ) && ! ( self::$instance instanceof EDD_Hide_Download ) ) {
+				self::$instance = new EDD_Hide_Download;
+				self::$instance->setup_globals();
+				self::$instance->hooks();
+			}
+
+			return self::$instance;
+		}
+
+		/**
+		 * Constructor Function
+		 *
+		 * @since 1.2
+		 * @access private
+		 * @see EDD_Hide_Download::init()
+		 * @see EDD_Hide_Download::activation()
+		 */
+		private function __construct() {
+			self::$instance = $this;
+
+			add_action( 'init', array( $this, 'init' ) );
+		}
+
+		/**
+		 * Reset the instance of the class
+		 *
+		 * @since 1.2
+		 * @access public
+		 * @static
+		 */
+		public static function reset() {
+			self::$instance = null;
+		}
+
+		/**
+		 * Globals
+		 *
+		 * @since 1.2
+		 * @return void
+		 */
+		private function setup_globals() {
+			$this->version 		= '1.2';
+			$this->title 		= 'EDD Hide Download';
+
+			// paths
+			$this->file         = __FILE__;
+			$this->basename     = apply_filters( 'edd_hd_plugin_basenname', plugin_basename( $this->file ) );
+			$this->plugin_dir   = apply_filters( 'edd_hd_plugin_dir_path',  plugin_dir_path( $this->file ) );
+			$this->plugin_url   = apply_filters( 'edd_hd_plugin_dir_url',   plugin_dir_url ( $this->file ) );
+		}
+
+		/**
+		 * Function fired on init
+		 *
+		 * This function is called on WordPress 'init'. It's triggered from the
+		 * constructor function.
+		 *
+		 * @since 1.2
+		 * @access public
+		 *
+		 * @uses EDD_Hide_Download::load_textdomain()
+		 *
+		 * @return void
+		 */
+		public function init() {
+			do_action( 'edd_hd_before_init' );
+
+			$this->load_textdomain();
+
+			do_action( 'edd_hd_after_init' );
+		}
+
+		/**
+		 * Setup the default hooks and actions
+		 *
+		 * @since 1.2
+		 *
+		 * @return void
+		 */
+		private function hooks() {
+			add_action( 'admin_init', array( $this, 'activation' ) );
+			
+			add_filter( 'plugin_row_meta', array( $this, 'plugin_meta' ), null, 2 );
+
 			add_action( 'edd_meta_box_fields', array( $this, 'add_metabox' ), 100 );
 			add_action( 'edd_metabox_fields_save', array( $this, 'save_metabox' ) );
 			add_action( 'pre_get_posts',  array( $this, 'pre_get_posts' ), 9999 );
@@ -38,15 +147,82 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 			// load the hidden downloads
 			$this->hidden_downloads = get_option( 'edd_hd_ids', array() );
 
+			// insert actions
+			do_action( 'edd_wl_setup_actions' );
 		}
 
 		/**
-		 * Internationalization
+		 * Activation function fires when the plugin is activated.
 		 *
-		 * @since 1.0
+		 * This function is fired when the activation hook is called by WordPress,
+		 * it flushes the rewrite rules and disables the plugin if EDD isn't active
+		 * and throws an error.
+		 *
+		 * @since 1.2
+		 * @access public
+		 *
+		 * @return void
 		 */
-		function textdomain() {
-			load_plugin_textdomain( 'edd-hd', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		public function activation() {
+			if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
+				// is this plugin active?
+				if ( is_plugin_active( $this->basename ) ) {
+					// deactivate the plugin
+			 		deactivate_plugins( $this->basename );
+			 		// unset activation notice
+			 		unset( $_GET[ 'activate' ] );
+			 		// display notice
+			 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+				}
+
+			}
+		}
+
+		/**
+		 * Admin notices
+		 *
+		 * @since 1.2
+		*/
+		public function admin_notices() {
+			$edd_plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/easy-digital-downloads/easy-digital-downloads.php', false, false );
+
+			if ( ! is_plugin_active('easy-digital-downloads/easy-digital-downloads.php') ) {
+				echo '<div class="error"><p>' . sprintf( __( 'You must install %sEasy Digital Downloads%s to use %s.', 'edd-hd' ), '<a href="http://easydigitaldownloads.com" title="Easy Digital Downloads" target="_blank">', '</a>', $this->title ) . '</p></div>';
+			}
+
+			if ( $edd_plugin_data['Version'] < '1.9' ) {
+				echo '<div class="error"><p>' . sprintf( __( '%s requires Easy Digital Downloads Version 1.9 or greater. Please update Easy Digital Downloads.', 'edd-hd' ), $this->title ) . '</p></div>';
+			}
+		}
+
+		/**
+		 * Loads the plugin language files
+		 *
+		 * @access public
+		 * @since 1.2
+		 * @return void
+		 */
+		public function load_textdomain() {
+			// Set filter for plugin's languages directory
+			$lang_dir = dirname( plugin_basename( $this->file ) ) . '/languages/';
+			$lang_dir = apply_filters( 'edd_hd_languages_directory', $lang_dir );
+
+			// Traditional WordPress plugin locale filter
+			$locale        = apply_filters( 'plugin_locale',  get_locale(), 'edd-hd' );
+			$mofile        = sprintf( '%1$s-%2$s.mo', 'edd-hd', $locale );
+
+			// Setup paths to current locale file
+			$mofile_local  = $lang_dir . $mofile;
+			$mofile_global = WP_LANG_DIR . '/edd-hd/' . $mofile;
+
+			if ( file_exists( $mofile_global ) ) {
+				load_textdomain( 'edd-hd', $mofile_global );
+			} elseif ( file_exists( $mofile_local ) ) {
+				load_textdomain( 'edd-hd', $mofile_local );
+			} else {
+				// Load the default language files
+				load_plugin_textdomain( 'edd-hd', false, $lang_dir );
+			}
 		}
 
 		/**
@@ -127,7 +303,8 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 		 * @since 1.0
 		*/
 		function shortcode_query( $query ) {
-			$query['post__not_in'] = $this->get_hidden_downloads();
+			$excluded_ids = isset( $query['post__not_in'] ) ? $query['post__not_in'] : array();
+			$query['post__not_in'] = array_merge( $excluded_ids, $this->get_hidden_downloads() );
 
 			return $query;
 		}
@@ -146,8 +323,11 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 			// hide downloads from all queries except singular pages, which will 404 without the conditional
 			// is_singular('download') doesn't work inside pre_get_posts
 			
-			if( ! $query->is_single )
-				$query->set( 'post__not_in', $this->get_hidden_downloads() );
+			if ( ! $query->is_single ) {
+				$excluded_ids = isset( $query->query_vars['post__not_in'] ) ? $query->query_vars['post__not_in'] : array();
+				// make sure we're merging with existing post__not_in so we do not override it
+				$query->set( 'post__not_in', array_merge( $excluded_ids, $this->get_hidden_downloads() ) );
+			}
 
 		}
 
@@ -164,7 +344,7 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 			$is_redirect_active = (boolean) get_post_meta( $post->ID, '_edd_hide_redirect_download', true );
 
 			if ( $is_redirect_active ) {
-				$redirect_url = apply_filters( 'edd_hide_download_redirect_url', site_url() );
+				$redirect_url = apply_filters( 'edd_hide_download_redirect', site_url() );
 
 				if ( isset( $_REQUEST['HTTP_REFERER'] ) ) {
 					$referer = esc_url( $_REQUEST['HTTP_REFERER '] );
@@ -179,7 +359,54 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 			
 		}
 
+		/**
+		 * Modify plugin metalinks
+		 *
+		 * @access      public
+		 * @since       1.2
+		 * @param       array $links The current links array
+		 * @param       string $file A specific plugin table entry
+		 * @return      array $links The modified links array
+		 */
+		public function plugin_meta( $links, $file ) {
+		    if ( $file == plugin_basename( __FILE__ ) ) {
+		        $plugins_link = array(
+		            '<a title="View more plugins for Easy Digital Downloads by Sumobi" href="https://easydigitaldownloads.com/blog/author/andrewmunro/?ref=166" target="_blank">' . __( 'Author\'s EDD plugins', 'edd-hd' ) . '</a>'
+		        );
+
+		        $links = array_merge( $links, $plugins_link );
+		    }
+
+		    return $links;
+		}
+
 	}
 
 }
-$EDD_Hide_Download = new EDD_Hide_Download();
+
+/**
+ * Loads a single instance
+ *
+ * This follows the PHP singleton design pattern.
+ *
+ * Use this function like you would a global variable, except without needing
+ * to declare the global.
+ *
+ * @example <?php $edd_hide_download = edd_hide_download(); ?>
+ *
+ * @since 1.0
+ *
+ * @see EDD_Hide_Download::get_instance()
+ *
+ * @return object Returns an instance of the main class
+ */
+function edd_hide_download() {
+	return EDD_Hide_Download::get_instance();
+}
+
+/**
+ * Loads plugin after all the others have loaded and have registered their hooks and filters
+ *
+ * @since 1.0
+*/
+add_action( 'plugins_loaded', 'edd_hide_download', apply_filters( 'edd_hd_action_priority', 10 ) );

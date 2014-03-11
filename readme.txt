@@ -3,8 +3,8 @@ Contributors: sumobi, alex.i
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EFUPMPEZPGW7L
 Tags: easy digital downloads, digital downloads, e-downloads, edd, hide, e-commerce, ecommerce, hidden, sumobi
 Requires at least: 3.3
-Tested up to: 3.6.1
-Stable tag: 1.1.5
+Tested up to: 3.9 alpha
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,11 +25,11 @@ This plugin is extremely useful in the following situations:
 1. You've created a product landing page and inserted a buy now button to your product. Since the landing page contains all the required product information, you can hide the product on the rest of your site and even prevent direct access to it.
 1. You've added a product (eg support package) that shouldn't sit with your other products you have listed. In this case we can simply hide it from appearing with the other products and insert it where we'd like it to appear using the shortcode. 
 
-** Filter example **
+**Filter example**
 
 Example filter of how you can change the redirect based on the download ID. Copy this function to your child theme's functions.php or custom plugin
 
-    function sumobi_custom_edd_hide_download_redirect_url( $url ) {
+    function sumobi_custom_edd_hide_download_redirect( $url ) {
     	// download has ID of 17
 		if ( '17' == get_the_ID() ) {
 			$url = 'http://easydigitaldownloads.com'; // redirect user to another external URL
@@ -43,15 +43,24 @@ Example filter of how you can change the redirect based on the download ID. Copy
 		// return our new URL
 		return $url;
 	}
-	add_filter( 'edd_hide_download_redirect_url', 'sumobi_custom_edd_hide_download_redirect_url' );
+	add_filter( 'edd_hide_download_redirect', 'sumobi_custom_edd_hide_download_redirect' );
+
+Example filter of how you can globally change the redirect. Copy this function to your child theme's functions.php or custom plugin
+
+    function sumobi_custom_edd_hide_download_redirect_url( $url ) {
+		$url = get_permalink( '8' ); // redirect to another download, post or page
+		
+		return $url;
+	}
+	add_filter( 'edd_hide_download_redirect', 'sumobi_custom_edd_hide_download_redirect' );
 
 **Extensions for Easy Digital Downloads**
 
-[https://easydigitaldownloads.com/extensions/](https://easydigitaldownloads.com/extensions/?ref=166 “Plugins for Easy Digital Downloads")
+[https://easydigitaldownloads.com/extensions/](https://easydigitaldownloads.com/extensions/?ref=166 "Plugins for Easy Digital Downloads")
 
 **Tips for Easy Digital Downloads**
 
-[http://sumobi.com/blog](http://sumobi.com/blog “Tips for Easy Digital Downloads")
+[http://sumobi.com/blog](http://sumobi.com/blog "Tips for Easy Digital Downloads")
 
 **Stay up to date**
 
@@ -80,14 +89,18 @@ After activation, a new "Hide Download" section will appear at the bottom of Eas
 
 == Upgrade Notice ==
 
-= 1.1.5 =
-New: edd_hide_download_redirect_url filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
-Fix: "Disable direct access to this download" will now prevent direct access to the download, even when "Hide this download" is off
+= 1.2 =
+Fix: array merge for post__in
 
 == Changelog ==
 
+= 1.2 =
+* Fix: array merge for post__in - props @StephenCronin
+* New: activation check for EDD
+* Tweak: Improved localization function
+
 = 1.1.5 =
-* New: edd_hide_download_redirect_url filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
+* New: edd_hide_download_redirect filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
 * Fix: "Disable direct access to this download" will now prevent direct access to the download, even when "Hide this download" is off
 
 = 1.1.4 =
