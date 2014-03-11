@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: easy digital downloads, digital downloads, e-downloads, edd, hide, e-commerce, ecommerce, hidden, sumobi
 Requires at least: 3.3
 Tested up to: 3.9 alpha
-Stable tag: 1.1.5
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,11 +89,15 @@ After activation, a new "Hide Download" section will appear at the bottom of Eas
 
 == Upgrade Notice ==
 
-= 1.1.5 =
-New: edd_hide_download_redirect filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
-Fix: "Disable direct access to this download" will now prevent direct access to the download, even when "Hide this download" is off
+= 1.2 =
+Fix: array merge for post__in
 
 == Changelog ==
+
+= 1.2 =
+* Fix: array merge for post__in - props @StephenCronin
+* New: activation check for EDD
+* Tweak: Improved localization function
 
 = 1.1.5 =
 * New: edd_hide_download_redirect filter for changing the redirection URL for downloads that have "Disable direct access to this download" enabled. Can also change the URL on a per download level
