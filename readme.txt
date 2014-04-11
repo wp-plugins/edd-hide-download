@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: easy digital downloads, digital downloads, e-downloads, edd, hide, e-commerce, ecommerce, hidden, sumobi
 Requires at least: 3.3
 Tested up to: 3.9 alpha
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,10 +89,13 @@ After activation, a new "Hide Download" section will appear at the bottom of Eas
 
 == Upgrade Notice ==
 
-= 1.2.1 =
-Fix: compatibility with bbPress
+= 1.2.2 =
+Fix: Compatibility with bbPress
 
 == Changelog ==
+
+= 1.2.2 =
+* Fix: Fatal error when bbPress was not active. Added check for existance of bbPress. 
 
 = 1.2.1 =
 * Fix: Compatibility with bbPress - props @nphaskins‎
