@@ -89,10 +89,13 @@ After activation, a new "Hide Download" section will appear at the bottom of Eas
 
 == Upgrade Notice ==
 
-= 1.2 =
-Fix: array merge for post__in
+= 1.2.1 =
+Fix: compatibility with bbPress
 
 == Changelog ==
+
+= 1.2.1 =
+* Fix: Compatibility with bbPress - props @nphaskins‎
 
 = 1.2 =
 * Fix: array merge for post__in - props @StephenCronin
