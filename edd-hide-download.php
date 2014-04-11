@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Hide Download
 Plugin URI: http://sumobi.com/shop/edd-hide-download/
 Description: Allows a download to be hidden as well as preventing direct access to the download
-Version: 1.2
+Version: 1.2.1
 Author: Andrew Munro, Sumobi
 Author URI: http://sumobi.com/
 License: GPL-2.0+
@@ -90,7 +90,7 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 		 * @return void
 		 */
 		private function setup_globals() {
-			$this->version 		= '1.2';
+			$this->version 		= '1.2.1';
 			$this->title 		= 'EDD Hide Download';
 
 			// paths
@@ -323,7 +323,7 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 			// hide downloads from all queries except singular pages, which will 404 without the conditional
 			// is_singular('download') doesn't work inside pre_get_posts
 			
-			if ( ! $query->is_single ) {
+			if ( ! ( $query->is_single || is_bbpress() ) ) {
 				$excluded_ids = isset( $query->query_vars['post__not_in'] ) ? $query->query_vars['post__not_in'] : array();
 				// make sure we're merging with existing post__not_in so we do not override it
 				$query->set( 'post__not_in', array_merge( $excluded_ids, $this->get_hidden_downloads() ) );
