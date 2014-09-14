@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Hide Download
 Plugin URI: http://sumobi.com/shop/edd-hide-download/
 Description: Allows a download to be hidden as well as preventing direct access to the download
-Version: 1.2.2
+Version: 1.2.3
 Author: Andrew Munro, Sumobi
 Author URI: http://sumobi.com/
 License: GPL-2.0+
@@ -133,7 +133,7 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 			
 			add_filter( 'plugin_row_meta', array( $this, 'plugin_meta' ), null, 2 );
 
-			add_action( 'edd_meta_box_fields', array( $this, 'add_metabox' ), 100 );
+			add_action( 'edd_meta_box_settings_fields', array( $this, 'add_metabox' ), 100 );
 			add_action( 'edd_metabox_fields_save', array( $this, 'save_metabox' ) );
 			add_action( 'pre_get_posts',  array( $this, 'pre_get_posts' ), 9999 );
 			add_filter( 'edd_downloads_query', array( $this, 'shortcode_query' ) );
@@ -316,11 +316,13 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 		 */
 		function pre_get_posts( $query ) {
 
-			$is_bbpress = function_exists( 'is_bbpress' ) ? is_bbpress() : false;
-
-			// bail if in the admin or on bbpress page
-			if ( is_admin() || $is_bbpress )
+			if ( ! isset( $wp_query ) ) {
 				return;
+			}
+
+			if ( $query->is_single || ( function_exists( 'is_bbpress' ) && is_bbpress() ) || is_admin() ) {
+				return;
+			}
 
 			// hide downloads from all queries except singular pages, which will 404 without the conditional
 			// is_singular('download') doesn't work inside pre_get_posts
