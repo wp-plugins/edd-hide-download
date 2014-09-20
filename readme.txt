@@ -3,8 +3,8 @@ Contributors: sumobi, alex.i
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EFUPMPEZPGW7L
 Tags: easy digital downloads, digital downloads, e-downloads, edd, hide, e-commerce, ecommerce, hidden, sumobi
 Requires at least: 3.3
-Tested up to: 3.9 alpha
-Stable tag: 1.2.3
+Tested up to: 4.0
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,11 +89,13 @@ After activation, a new "Hide Download" section will appear at the bottom of Eas
 
 == Upgrade Notice ==
 
-= 1.2.3 =
-Fix: Forums not being shown in bbPress
-
+= 1.2.4 =
+Fix: Hidden downloads not being hidden properly on some pages such as the custom post type archive pages
 
 == Changelog ==
+
+= 1.2.4 =
+* Fix: Hidden downloads not being hidden properly on some pages such as the custom post type archive pages
 
 = 1.2.3 =
 * Fix: Forums not being shown in bbPress

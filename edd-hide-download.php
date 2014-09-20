@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Hide Download
 Plugin URI: http://sumobi.com/shop/edd-hide-download/
 Description: Allows a download to be hidden as well as preventing direct access to the download
-Version: 1.2.3
+Version: 1.2.4
 Author: Andrew Munro, Sumobi
 Author URI: http://sumobi.com/
 License: GPL-2.0+
@@ -316,7 +316,7 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 		 */
 		function pre_get_posts( $query ) {
 
-			if ( ! isset( $wp_query ) ) {
+			if ( ! isset( $query ) ) {
 				return;
 			}
 
