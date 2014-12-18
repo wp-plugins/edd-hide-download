@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Hide Download
 Plugin URI: http://sumobi.com/shop/edd-hide-download/
 Description: Allows a download to be hidden as well as preventing direct access to the download
-Version: 1.2.4
+Version: 1.2.5
 Author: Andrew Munro, Sumobi
 Author URI: http://sumobi.com/
 License: GPL-2.0+
@@ -90,7 +90,7 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 		 * @return void
 		 */
 		private function setup_globals() {
-			$this->version 		= '1.2.2';
+			$this->version 		= '1.2.5';
 			$this->title 		= 'EDD Hide Download';
 
 			// paths
@@ -129,7 +129,6 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 		 * @return void
 		 */
 		private function hooks() {
-			add_action( 'admin_init', array( $this, 'activation' ) );
 			
 			add_filter( 'plugin_row_meta', array( $this, 'plugin_meta' ), null, 2 );
 
@@ -151,49 +150,6 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 			do_action( 'edd_wl_setup_actions' );
 		}
 
-		/**
-		 * Activation function fires when the plugin is activated.
-		 *
-		 * This function is fired when the activation hook is called by WordPress,
-		 * it flushes the rewrite rules and disables the plugin if EDD isn't active
-		 * and throws an error.
-		 *
-		 * @since 1.2
-		 * @access public
-		 *
-		 * @return void
-		 */
-		public function activation() {
-			if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
-				// is this plugin active?
-				if ( is_plugin_active( $this->basename ) ) {
-					// deactivate the plugin
-			 		deactivate_plugins( $this->basename );
-			 		// unset activation notice
-			 		unset( $_GET[ 'activate' ] );
-			 		// display notice
-			 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-				}
-
-			}
-		}
-
-		/**
-		 * Admin notices
-		 *
-		 * @since 1.2
-		*/
-		public function admin_notices() {
-			$edd_plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/easy-digital-downloads/easy-digital-downloads.php', false, false );
-
-			if ( ! is_plugin_active('easy-digital-downloads/easy-digital-downloads.php') ) {
-				echo '<div class="error"><p>' . sprintf( __( 'You must install %sEasy Digital Downloads%s to use %s.', 'edd-hd' ), '<a href="http://easydigitaldownloads.com" title="Easy Digital Downloads" target="_blank">', '</a>', $this->title ) . '</p></div>';
-			}
-
-			if ( $edd_plugin_data['Version'] < '1.9' ) {
-				echo '<div class="error"><p>' . sprintf( __( '%s requires Easy Digital Downloads Version 1.9 or greater. Please update Easy Digital Downloads.', 'edd-hd' ), $this->title ) . '</p></div>';
-			}
-		}
 
 		/**
 		 * Loads the plugin language files
@@ -386,31 +342,37 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 
 	}
 
-}
+	/**
+	 * Loads a single instance
+	 *
+	 * This follows the PHP singleton design pattern.
+	 *
+	 * Use this function like you would a global variable, except without needing
+	 * to declare the global.
+	 *
+	 * @example <?php $edd_hide_download = edd_hide_download(); ?>
+	 *
+	 * @since 1.0
+	 *
+	 * @see EDD_Hide_Download::get_instance()
+	 *
+	 * @return object Returns an instance of the main class
+	 */
+	function edd_hide_download() {
 
-/**
- * Loads a single instance
- *
- * This follows the PHP singleton design pattern.
- *
- * Use this function like you would a global variable, except without needing
- * to declare the global.
- *
- * @example <?php $edd_hide_download = edd_hide_download(); ?>
- *
- * @since 1.0
- *
- * @see EDD_Hide_Download::get_instance()
- *
- * @return object Returns an instance of the main class
- */
-function edd_hide_download() {
-	return EDD_Hide_Download::get_instance();
-}
+	    if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
 
-/**
- * Loads plugin after all the others have loaded and have registered their hooks and filters
- *
- * @since 1.0
-*/
-add_action( 'plugins_loaded', 'edd_hide_download', apply_filters( 'edd_hd_action_priority', 10 ) );
+	        if ( ! class_exists( 'EDD_Extension_Activation' ) ) {
+	            require_once 'includes/class-activation.php';
+	        }
+
+	        $activation = new EDD_Extension_Activation( plugin_dir_path( __FILE__ ), basename( __FILE__ ) );
+	        $activation = $activation->run();
+	     
+	    } else {
+	        return EDD_Hide_Download::get_instance();
+	    }
+	}
+	add_action( 'plugins_loaded', 'edd_hide_download', apply_filters( 'edd_hd_action_priority', 10 ) );
+
+}
