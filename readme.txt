@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: easy digital downloads, digital downloads, e-downloads, edd, hide, e-commerce, ecommerce, hidden, sumobi
 Requires at least: 3.3
 Tested up to: 4.1
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,10 +89,13 @@ After activation, a new "Hide Download" section will appear at the bottom of Eas
 
 == Upgrade Notice ==
 
-= 1.2.5 =
-Fix: Plugin became deactivated when EDD was updated 
+= 1.2.6 =
+New: Compability with the Front End Submissions extension. When a download is hidden it will remain visible on the vendor's dashboard product page
 
 == Changelog ==
+
+= 1.2.6 =
+* New: Compability with the Front End Submissions extension. When a download is hidden it will remain visible on the vendor's dashboard product page
 
 = 1.2.5 =
 * Fix: Plugin became deactivated when EDD was updated 
