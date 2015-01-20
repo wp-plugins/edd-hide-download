@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Hide Download
 Plugin URI: http://sumobi.com/shop/edd-hide-download/
 Description: Allows a download to be hidden as well as preventing direct access to the download
-Version: 1.2.5
+Version: 1.2.6
 Author: Andrew Munro, Sumobi
 Author URI: http://sumobi.com/
 License: GPL-2.0+
@@ -90,7 +90,7 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 		 * @return void
 		 */
 		private function setup_globals() {
-			$this->version 		= '1.2.5';
+			$this->version 		= '1.2.6';
 			$this->title 		= 'EDD Hide Download';
 
 			// paths
@@ -277,6 +277,11 @@ if ( ! class_exists( 'EDD_Hide_Download' ) ) {
 			}
 
 			if ( $query->is_single || ( function_exists( 'is_bbpress' ) && is_bbpress() ) || is_admin() ) {
+				return;
+			}
+
+			// if a download is hidden, prevent it from being hidden on the FES vendor dashboard page
+			if ( is_page( EDD_FES()->helper->get_option( 'fes-vendor-dashboard-page', false ) ) ) {
 				return;
 			}
 
